@@ -151,17 +151,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "backend"
-version = "0.2.0"
-dependencies = [
- "askama",
- "askama_axum",
- "axum",
- "tokio",
- "tower-http",
-]
-
-[[package]]
 name = "backtrace"
 version = "0.3.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -659,6 +648,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b2a4719bff48cee6b39d12c020eeb490953ad2443b7055bd0b21fca26bd8c28b"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "silkdle"
+version = "0.2.1"
+dependencies = [
+ "askama",
+ "askama_axum",
+ "axum",
+ "tokio",
+ "tower-http",
 ]
 
 [[package]]
