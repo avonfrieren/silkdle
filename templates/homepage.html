@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>silkdle</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-<body>
-    <h1>WIP</h1>
-    <p>{{ test }}</p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <ul>
+      {% for (label, results) in results_zone %}
+        <li>{{ label }} : {{ results }}</li>
+      {% endfor %}
+    </ul>
+
+    <form action="/choose_zone" method="post">
+        <select name="zone_name">
+          {% for z in zones %}
+            <option value="{{ z.name }}">{{ z.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
