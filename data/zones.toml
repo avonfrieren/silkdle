@@ -1,0 +1,27 @@
+[[zones]]
+name = "Moss Grotto"
+size = 18
+acte = 1
+bosses = 4
+station = true
+
+[[zones]]
+name = "The Marrow"
+size = 22
+acte = 1
+bosses = 2
+station = true
+
+[[zones]]
+name = "Deep Docks"
+size = 31
+acte = 1
+bosses = 2
+station = true
+
+[[zones]]
+name = "The Abyss"
+size = 14
+acte = 3
+bosses = 1
+station = false

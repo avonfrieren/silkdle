@@ -21,7 +21,7 @@ En cours de construction
 ### À faire (code)
 
 - [ ] Une réponse choisie par jour (par refresh de page pour le prototype)
-- [ ] Logique principale (pouvoir entrer une réponse, la comparer et actualiser les critères)
+- [x] Logique principale (pouvoir entrer une réponse, la comparer et actualiser les critères)
 - [ ] Connexion base de données (login email / nom d'affichage — pas nécessaire pour jouer, seulement pour enregistrer son score et avoir un historique)
 - [ ] Données de fin de partie liées au compte, calculées et stockées (si connecté)
 - [ ] Page d'historique des parties
