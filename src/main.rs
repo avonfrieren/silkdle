@@ -1,10 +1,12 @@
 use std::{
     fs,
-    fmt
+    fmt,
+    sync::Arc,
+    sync::Mutex
 };
 
 use axum::{
-    extract::Form,
+    extract::{Form, State},
     routing::get,
     Router
 };
@@ -19,13 +21,13 @@ use serde::Deserialize;
 #[derive(Template)]
 #[template(path = "homepage.html")]
 struct HomepageTemplate {
-    results_zone: Vec<(&'static str, CompareResult)>,
+    results_history: Vec<Vec<(&'static str, CompareResult)>>,
     zones: Vec<Zone>,
 }
 
 async fn homepage() -> impl axum::response::IntoResponse {
     HomepageTemplate {
-        results_zone: vec![],
+        results_history: vec![],
         zones: load_zones(),
     }
 }
@@ -35,7 +37,11 @@ struct ZoneChoice {
     zone_name: String,
 }
 
-async fn choose_zone(Form(input): Form<ZoneChoice>) -> impl axum::response::IntoResponse {
+fn label_results(results: Vec<CompareResult>, labels: [&'static str; 5]) -> Vec<(&'static str, CompareResult)> {
+    labels.into_iter().zip(results).collect()
+}
+
+async fn choose_zone(State(state): State<Arc<AppState>>, Form(input): Form<ZoneChoice>) -> impl axum::response::IntoResponse {
     // every zones
     let all_zones = load_zones();
     // labels of the results
@@ -49,11 +55,18 @@ async fn choose_zone(Form(input): Form<ZoneChoice>) -> impl axum::response::Into
     let chosen = all_zones.iter().find(|z| z.name == chosen_name).expect("the chosen zone does not exist");
 
     // final comparison between the target and chosen zone creating a CompareResult vec, using it for display
-    let results = chosen.compare(&target);
-    let results_zone: Vec<(&'static str, CompareResult)> = labels.into_iter().zip(results).collect();
+    let results: Vec<CompareResult> = chosen.compare(&target);
+
+    let results_history: Vec<Vec<(&'static str, CompareResult)>> = {
+        let mut guesses = state.guesses.lock().unwrap();
+        guesses.push(results);
+        guesses.iter()
+            .map(|g| label_results(g.clone(), labels))
+            .collect()
+    };
 
     HomepageTemplate {
-        results_zone,
+        results_history,
         zones: all_zones,
     }
 }
@@ -84,6 +97,7 @@ fn load_zones() -> Vec<Zone> {
 zones_file.zones
 }
 
+#[derive(Debug, Clone)]
 enum CompareResult {
     Smaller,
     Greater,
@@ -154,8 +168,17 @@ impl Zone {
 //     }
 // }
 
+#[derive(Debug)]
+struct AppState {
+    guesses: Mutex<Vec<Vec<CompareResult>>>,
+}
+
 #[tokio::main]
 async fn main() {
+    let state = Arc::new(AppState {
+        guesses: Mutex::new(vec![]),
+    });
+    
     // router
     let static_files = axum::Router::new().nest_service(
         "/static",
@@ -165,6 +188,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(homepage))
         .route("/choose_zone", post(choose_zone))
+        .with_state(state.clone())
         // .route("/login", get(login))
         .merge(static_files);
 
