@@ -4,7 +4,7 @@ silksong wordle type website with rust backend
 
 ## [FR] Français
 
-### Concept
+### Principe
 
 Deviner la zone / monstre / NPC
 
@@ -20,7 +20,7 @@ En cours de construction
 
 ### À faire (code)
 
-- [ ] Une réponse choisie par jour (par refresh de page pour le prototype)
+- [x] Une réponse choisie par jour
 - [x] Logique principale (pouvoir entrer une réponse, la comparer et actualiser les critères)
 - [ ] Connexion base de données (login email / nom d'affichage — pas nécessaire pour jouer, seulement pour enregistrer son score et avoir un historique)
 - [ ] Données de fin de partie liées au compte, calculées et stockées (si connecté)
@@ -53,8 +53,8 @@ Under construction
 
 ### To do (code)
 
-- [ ] Choose a “daily answer” (refresh page for the prototype)
-- [ ] Main logic (enter an answer, compare it, and update criteria)
+- [x] Choose a “daily answer”
+- [x] Main logic (enter an answer, compare it, and update criteria)
 - [ ] Database connection (login with email / display name — not necessary to play, only to save scores and history)
 - [ ] End-of-game data linked to account, calculated and stored (if logged in)
 - [ ] Game history page
@@ -65,4 +65,3 @@ Under construction
 ### Ideas
 
 - Calculate with database data whether today’s answer was difficult or not, store this information, and display it on the site with a color (green, yellow, orange, red) or numbers (/5, 10, 20)
-
