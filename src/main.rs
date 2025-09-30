@@ -21,7 +21,7 @@ use serde::Deserialize;
 #[derive(Template)]
 #[template(path = "homepage.html")]
 struct HomepageTemplate {
-    results_history: Vec<Vec<(&'static str, CompareResult)>>,
+    results_history: Vec<Vec<(String, CompareResult)>>,
     zones: Vec<Zone>,
 }
 
@@ -37,32 +37,62 @@ struct ZoneChoice {
     zone_name: String,
 }
 
-fn label_results(results: Vec<CompareResult>, labels: [&'static str; 5]) -> Vec<(&'static str, CompareResult)> {
-    labels.into_iter().zip(results).collect()
+// load zones like a generic tree
+fn load_raw() -> toml::Value {
+    let zones = std::fs::read_to_string("data/zones.toml").unwrap();
+    toml::from_str(&zones).unwrap()
+}
+
+// load zones as a vector of every zones
+fn load_zones() -> Vec<Zone> {
+    let toml_str = fs::read_to_string("data/zones.toml")
+        .expect("failed to read zones.toml");
+
+    let zones_file: ZonesFile = toml::from_str(&toml_str)
+        .expect("failed to parse toml");
+
+    zones_file.zones
+}
+
+fn load_labels_and_zones() -> (Vec<String>, Vec<Zone>) {
+    let raw = load_raw();
+
+    // récupérer l'ordre des labels
+    let labels = raw["labels"]
+        .as_array().unwrap()
+        .iter()
+        .map(|v| v.as_str().unwrap().to_string())
+        .collect::<Vec<_>>();
+
+    let zones_vec = load_zones();
+
+    (labels, zones_vec)
+}
+
+fn label_results(results: Vec<CompareResult>, labels: &Vec<String>) -> Vec<(String, CompareResult)> {
+    labels.iter().cloned().zip(results).collect()
 }
 
 async fn choose_zone(State(state): State<Arc<AppState>>, Form(input): Form<ZoneChoice>) -> impl axum::response::IntoResponse {
-    // every zones
-    let all_zones = load_zones();
-    // labels of the results
-    let labels: [&'static str; 5] = ["name", "size", "acte", "bosses", "station"];
-
-    // target zone (hardcoded for now, will change)
+    // target hardcoded for now (need to be chosen every day randomly)
     let target = Zone { name: "Moss Grotto".to_string(), size: 18, acte: 1, bosses: 4, station: true };
-    // zone name selected by the user submit in form
-    let chosen_name = input.zone_name;
-    // finding the zone struct with the name
-    let chosen = all_zones.iter().find(|z| z.name == chosen_name).expect("the chosen zone does not exist");
+    
+    // loading every labels and zones from the zones.toml file
+    let (labels, all_zones) = load_labels_and_zones();
+    // getting the zone struct with input zone name
+    let chosen = all_zones.iter()
+        .find(|z| z.name == input.zone_name)
+        .expect("the chosen zone does not exist");
 
-    // final comparison between the target and chosen zone creating a CompareResult vec, using it for display
-    let results: Vec<CompareResult> = chosen.compare(&target);
+    // actual comparison (core logic)
+    let results = chosen.compare(&target);
 
-    let results_history: Vec<Vec<(&'static str, CompareResult)>> = {
-        let mut guesses = state.guesses.lock().unwrap();
-        guesses.push(results);
-        guesses.iter()
-            .map(|g| label_results(g.clone(), labels))
-            .collect()
+    let results_history: Vec<Vec<(String, CompareResult)>> = {
+    let mut guesses = state.guesses.lock().unwrap();
+    guesses.push(results);
+    guesses.iter()
+        .map(|g| label_results(g.clone(), &labels))
+        .collect()
     };
 
     HomepageTemplate {
@@ -70,7 +100,6 @@ async fn choose_zone(State(state): State<Arc<AppState>>, Form(input): Form<ZoneC
         zones: all_zones,
     }
 }
-
 
 // core logic
 #[derive(Debug, Deserialize)]
@@ -85,16 +114,6 @@ struct Zone {
 #[derive(Debug, Deserialize)]
 struct ZonesFile {
     zones: Vec<Zone>,
-}
-
-fn load_zones() -> Vec<Zone> {
-    let toml_str = fs::read_to_string("data/zones.toml")
-        .expect("failed to read zones.toml");
-
-    let zones_file: ZonesFile = toml::from_str(&toml_str)
-        .expect("failed to parse toml");
-
-zones_file.zones
 }
 
 #[derive(Debug, Clone)]
@@ -156,18 +175,6 @@ impl Zone {
     }
 }
 
-// #[derive(Template)]
-// #[template(path = "login.html")]
-// struct LoginTemplate<'a>{
-//     email: &'a str,
-// }
-
-// async fn login() -> impl axum::response::IntoResponse {
-//     LoginTemplate {
-//         email : "avon@avon.avon"
-//     }
-// }
-
 #[derive(Debug)]
 struct AppState {
     guesses: Mutex<Vec<Vec<CompareResult>>>,
@@ -189,7 +196,6 @@ async fn main() {
         .route("/", get(homepage))
         .route("/choose_zone", post(choose_zone))
         .with_state(state.clone())
-        // .route("/login", get(login))
         .merge(static_files);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
