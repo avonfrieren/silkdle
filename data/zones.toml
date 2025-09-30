@@ -1,3 +1,5 @@
+labels = ["name", "size", "acte", "bosses", "station"]
+
 [[zones]]
 name = "Moss Grotto"
 size = 18

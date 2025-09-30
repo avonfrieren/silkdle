@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-    <ul>
-      {% for (label, results) in results_zone %}
-        <li>{{ label }} : {{ results }}</li>
-      {% endfor %}
-    </ul>
+    {% for guess in results_history %}
+      <ul>
+        {% for (label, result) in guess %}
+          <li>{{ label }} : {{ result }}</li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
 
     <form action="/choose_zone" method="post">
         <select name="zone_name">
