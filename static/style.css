@@ -1,4 +1,4 @@
-/* Theme variables */
+/* theme variables */
 :root {
   --bg: #000;
   --fg: #fff;
@@ -7,6 +7,9 @@
   --border: #2a2a2a;
   --accent-dark: rgb(48,0,10);
   --accent: rgb(228,98,88);
+  --bottom-bar-h: 64px;
+  --radius: 12px;
+  --table-max-w: 900px;
 }
 
 body {
@@ -16,16 +19,15 @@ body {
     text-align: center;
     margin: 0;
     background-color: var(--surface);
+    overflow-y: auto;
+    padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
 }
 
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--fg);
-}
 
 /* font similar to trojan but under free liscence ) */
+/* bold one for title */
 @font-face {
-    font-family: 'Cinzel Custom';
+    font-family: 'Cinzel Bold';
     src: url('/static/cinzel_bold.otf') format('opentype');
     font-weight: 700;
     font-style: normal;
@@ -34,7 +36,7 @@ h1 {
 
 /* site title */
 .h1, h1.site-title {
-    font-family: 'Cinzel Custom', 'Cinzel', serif;
+    font-family: 'Cinzel Bold', 'Cinzel', serif;
     font-size: 10rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -44,14 +46,22 @@ h1 {
 }
 
 /* results table */
+.table-container {
+    max-width: min(var(--table-max-w), 92vw);
+    margin: 0 auto;
+    padding-bottom: var(--bottom-bar-h);
+}
+
 table {
-    margin: 2em 0;
-    border-collapse: collapse;
+    margin: 1.25em auto;
+    border-collapse: separate;
+    border-spacing: 0;
     background: var(--surface);
     color: white;
     width: 100%;
-    max-width: 100vw;
-    table-layout: fixed;
+    max-width: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 th, td {
@@ -61,6 +71,7 @@ th, td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 0.95rem;
 }
 th {
     text-align: center;
@@ -75,10 +86,16 @@ tbody > tr:nth-child(even) {
 }
 
 tbody > tr:hover {
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
-/* Inputs & buttons */
+/* del external border to round properly */
+thead th { border-top: none; }
+th:first-child, td:first-child { border-left: none; }
+th:last-child, td:last-child { border-right: none; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* inputs and buttons */
 select,
 input[type="text"],
 input[type="email"],
@@ -112,31 +129,43 @@ button:focus {
     outline-offset: 2px;
 }
 
-/* Links */
+/* links */
 a { color: var(--accent); }
 a:hover { color: color-mix(in srgb, var(--accent) 80%, #fff 20%); }
 
-/* Selection */
+/* selection */
 ::selection { background: var(--accent); color: #100; }
 
-/* table container */
-.table-container {
-    width: 100vw;
-    overflow-x: auto;
-    padding: 0 1rem;
-    box-sizing: border-box;
+/* selection bar in bottom */
+.bottom-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    min-height: var(--bottom-bar-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    backdrop-filter: blur(2px);
 }
+
+.bottom-bar select { min-width: 220px; }
 
 /* coloration depending on results veracity */
 td[data-result="Equal"] {
-    background: #1b5e20; /* vert */
+    background: #1b5e20;
     color: #fff;
 }
 
 td[data-result="Smaller"],
 td[data-result="Greater"],
 td[data-result="NotCorrect"] {
-    background: #8b1e1e; /* rouge */
+    background: #8b1e1e;
     color: #fff;
 }
 
@@ -147,4 +176,9 @@ td[data-result="NotCorrect"] {
         font-size: 0.95rem;
     }
   .h1, h1.site-title { font-size: clamp(2.2rem, 10vw, 4rem); }
+}
+
+/* less density on really small screens */
+@media (max-width: 420px) {
+  th, td { font-size: 0.9rem; padding: 0.5em 0.6em; }
 }

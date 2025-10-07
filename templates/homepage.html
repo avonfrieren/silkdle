@@ -22,7 +22,7 @@
       </table>
     </div>
 
-    <form action="/choose_zone" method="post">
+    <form class="bottom-bar" action="/choose_zone" method="post">
         <select name="zone_name">
           {% for z in zones %}
             <option value="{{ z.name }}">{{ z.name }}</option>

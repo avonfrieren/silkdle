@@ -13,7 +13,7 @@ use chrono::{
     NaiveDate,
 };
 
-use crate::{models::{Zone, ZonesFile}, compare::CompareResult};
+use crate::{models::{Zone, ZonesFile}};
 
 // load zones from data file as a toml tree object like json
 pub fn load_raw() -> toml::Value {
@@ -45,11 +45,6 @@ pub fn load_labels_and_zones() -> (Vec<String>, Vec<Zone>) {
     let zones_vec = load_zones();
 
     (labels, zones_vec)
-}
-
-// label the results of a comparison between two zones for displaying purpose
-pub fn label_results(results: Vec<CompareResult>, labels: &Vec<String>) -> Vec<(String, CompareResult)> {
-    labels.iter().cloned().zip(results).collect()
 }
 
 // constructing a random pick between existing zone for the day
