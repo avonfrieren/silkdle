@@ -1,6 +1,6 @@
 [package]
 name = "silkdle"
-version = "0.4.1"
+version = "0.5.0"
 edition = "2024"
 
 [dependencies]
@@ -15,3 +15,5 @@ serde = { version = "1.0.228", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 toml = "0.9.7"
 tower-http = { version = "0.6.6", features = ["fs"] }
+tower-cookies = "0.10"
+uuid = { version = "1", features = ["v4"] }

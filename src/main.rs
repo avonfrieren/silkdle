@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use axum::{routing::{get, post}, Router};
 use tower_http::services::ServeDir;
+use tower_cookies::CookieManagerLayer;
 
 mod state;
 mod models;
@@ -24,7 +25,8 @@ async fn main() {
         .route("/", get(homepage))
         .route("/choose_zone", post(choose_zone))
         .with_state(state.clone())
-        .merge(static_files);
+        .merge(static_files)
+        .layer(CookieManagerLayer::new());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("🚀 Server running at http://{}", addr);
