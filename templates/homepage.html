@@ -1,12 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for guess in results_history %}
-      <ul>
-        {% for (label, result) in guess %}
-          <li>{{ label }} : {{ result }}</li>
-        {% endfor %}
-      </ul>
-    {% endfor %}
+    <h1>Silkdle</h1>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            {% for label in labels %}
+              <th>{{ label }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for guess in results_history %}
+            <tr>
+              {% for result in guess %}
+                <td data-result="{{ result }}">{{ result }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
     <form action="/choose_zone" method="post">
         <select name="zone_name">
