@@ -1,20 +1,53 @@
+/* Theme variables */
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --surface: #121212;
+  --surface-2: #171717;
+  --border: #2a2a2a;
+  --accent-dark: rgb(48,0,10);
+  --accent: rgb(228,98,88);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: black;
-    color: white;
+    background-color: var(--bg);
+    color: var(--fg);
     text-align: center;
     margin: 0;
+    background-color: var(--surface);
 }
 
 h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: whitesmoke;
+    color: var(--fg);
 }
 
+/* font similar to trojan but under free liscence ) */
+@font-face {
+    font-family: 'Cinzel Custom';
+    src: url('/static/cinzel_bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* site title */
+.h1, h1.site-title {
+    font-family: 'Cinzel Custom', 'Cinzel', serif;
+    font-size: 10rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin: 0.5rem 0 1rem;
+    color: var(--fg);
+    text-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+}
+
+/* results table */
 table {
     margin: 2em 0;
     border-collapse: collapse;
-    background: #222;
+    background: var(--surface);
     color: white;
     width: 100%;
     max-width: 100vw;
@@ -22,7 +55,7 @@ table {
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 th, td {
-    border: 1px solid #444;
+    border: 1px solid var(--border);
     padding: 0.7em 1.2em;
     text-align: center;
     overflow: hidden;
@@ -32,22 +65,61 @@ th, td {
 th {
     text-align: center;
     text-transform: uppercase;
-    background: #333;
-    color: #ffd700;
-    font-weight: bold;
+    background: var(--accent-dark);
+    color: var(--fg);
+    border-bottom: 2px solid var(--border);
 }
+
 tbody > tr:nth-child(even) {
-    background: #282828;
+    background: var(--surface-2);
 }
 
-/* reduire legerement la densite sur de petits ecrans */
-@media (max-width: 600px) {
-    th, td {
-        padding: 0.5em 0.6em;
-        font-size: 0.95rem;
-    }
+tbody > tr:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
+/* Inputs & buttons */
+select,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+button,
+input[type="submit"] {
+    background: #0e0e0e;
+    color: var(--fg);
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.9rem;
+    border-radius: 6px;
+}
+
+input[type="submit"], button {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #100;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    filter: brightness(0.95);
+}
+
+select:focus,
+input:focus,
+button:focus {
+    outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    outline-offset: 2px;
+}
+
+/* Links */
+a { color: var(--accent); }
+a:hover { color: color-mix(in srgb, var(--accent) 80%, #fff 20%); }
+
+/* Selection */
+::selection { background: var(--accent); color: #100; }
+
+/* table container */
 .table-container {
     width: 100vw;
     overflow-x: auto;
@@ -55,7 +127,7 @@ tbody > tr:nth-child(even) {
     box-sizing: border-box;
 }
 
-/* Coloration conditionnelle selon le résultat */
+/* coloration depending on results veracity */
 td[data-result="Equal"] {
     background: #1b5e20; /* vert */
     color: #fff;
@@ -66,4 +138,13 @@ td[data-result="Greater"],
 td[data-result="NotCorrect"] {
     background: #8b1e1e; /* rouge */
     color: #fff;
+}
+
+/* less density on small screens */
+@media (max-width: 600px) {
+  th, td {
+        padding: 0.5em 0.6em;
+        font-size: 0.95rem;
+    }
+  .h1, h1.site-title { font-size: clamp(2.2rem, 10vw, 4rem); }
 }
