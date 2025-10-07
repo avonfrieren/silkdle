@@ -1,4 +1,4 @@
-/* Theme variables */
+/* theme variables */
 :root {
   --bg: #000;
   --fg: #fff;
@@ -112,11 +112,11 @@ button:focus {
     outline-offset: 2px;
 }
 
-/* Links */
+/* links */
 a { color: var(--accent); }
 a:hover { color: color-mix(in srgb, var(--accent) 80%, #fff 20%); }
 
-/* Selection */
+/* selection */
 ::selection { background: var(--accent); color: #100; }
 
 /* table container */
