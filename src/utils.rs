@@ -47,7 +47,7 @@ pub fn load_labels_and_zones() -> (Vec<String>, Vec<Zone>) {
     (labels, zones_vec)
 }
 
-// label the results of a comparison between to zones for displaying purpose
+// label the results of a comparison between two zones for displaying purpose
 pub fn label_results(results: Vec<CompareResult>, labels: &Vec<String>) -> Vec<(String, CompareResult)> {
     labels.iter().cloned().zip(results).collect()
 }

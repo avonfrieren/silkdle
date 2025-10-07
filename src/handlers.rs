@@ -6,13 +6,15 @@ use serde::Deserialize;
 use crate::{
     state::AppState,
     templates::HomepageTemplate,
-    utils::{load_labels_and_zones, label_results, load_zones},
+    utils::load_labels_and_zones,
 };
 
 pub async fn homepage() -> impl IntoResponse {
+    let (labels, zones) = load_labels_and_zones();
     HomepageTemplate {
+        labels,
         results_history: vec![],
-        zones: load_zones(),
+        zones,
     }
 }
 
@@ -32,15 +34,15 @@ pub async fn choose_zone(
 
     let results = chosen.compare(&state.daily_zone);
 
+    // Stocker l'historique comme des lignes de CompareResult (sans labels)
     let results_history = {
         let mut guesses = state.guesses.lock().unwrap();
         guesses.push(results);
-        guesses.iter()
-            .map(|g| label_results(g.clone(), &labels))
-            .collect()
+        guesses.clone()
     };
 
     HomepageTemplate {
+        labels,
         results_history,
         zones: all_zones,
     }

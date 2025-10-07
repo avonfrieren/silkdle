@@ -3,9 +3,67 @@ body {
     background-color: black;
     color: white;
     text-align: center;
+    margin: 0;
 }
 
 h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: gold;
+    color: whitesmoke;
+}
+
+table {
+    margin: 2em 0;
+    border-collapse: collapse;
+    background: #222;
+    color: white;
+    width: 100%;
+    max-width: 100vw;
+    table-layout: fixed;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+th, td {
+    border: 1px solid #444;
+    padding: 0.7em 1.2em;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+th {
+    text-align: center;
+    text-transform: uppercase;
+    background: #333;
+    color: #ffd700;
+    font-weight: bold;
+}
+tbody > tr:nth-child(even) {
+    background: #282828;
+}
+
+/* reduire legerement la densite sur de petits ecrans */
+@media (max-width: 600px) {
+    th, td {
+        padding: 0.5em 0.6em;
+        font-size: 0.95rem;
+    }
+}
+
+.table-container {
+    width: 100vw;
+    overflow-x: auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+/* Coloration conditionnelle selon le résultat */
+td[data-result="Equal"] {
+    background: #1b5e20; /* vert */
+    color: #fff;
+}
+
+td[data-result="Smaller"],
+td[data-result="Greater"],
+td[data-result="NotCorrect"] {
+    background: #8b1e1e; /* rouge */
+    color: #fff;
 }
