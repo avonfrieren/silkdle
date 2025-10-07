@@ -16,7 +16,7 @@ En cours de construction
 
 - [ ] Définir les critères pour chaque mode de jeu (zones, monstres ou NPC)
 - [ ] Rassembler les données de toutes les zones, monstres et NPC du jeu
-- [ ] Trouver la police d'écriture de Hollow Knight: Silksong
+- [x] Trouver la police d'écriture de Hollow Knight: Silksong
 
 ### À faire (code)
 
