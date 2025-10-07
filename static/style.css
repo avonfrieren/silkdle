@@ -7,6 +7,7 @@
   --border: #2a2a2a;
   --accent-dark: rgb(48,0,10);
   --accent: rgb(228,98,88);
+  --bottom-bar-h: 64px;
 }
 
 body {
@@ -16,6 +17,8 @@ body {
     text-align: center;
     margin: 0;
     background-color: var(--surface);
+    overflow-y: auto;
+    padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
 }
 
 h1 {
@@ -121,22 +124,42 @@ a:hover { color: color-mix(in srgb, var(--accent) 80%, #fff 20%); }
 
 /* table container */
 .table-container {
-    width: 100vw;
+    width: 100%;
     overflow-x: auto;
     padding: 0 1rem;
     box-sizing: border-box;
 }
 
+/* selection bar in bottom */
+.bottom-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    min-height: var(--bottom-bar-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+
+.bottom-bar select { min-width: 220px; }
+
 /* coloration depending on results veracity */
 td[data-result="Equal"] {
-    background: #1b5e20; /* vert */
+    background: #1b5e20;
     color: #fff;
 }
 
 td[data-result="Smaller"],
 td[data-result="Greater"],
 td[data-result="NotCorrect"] {
-    background: #8b1e1e; /* rouge */
+    background: #8b1e1e;
     color: #fff;
 }
 
